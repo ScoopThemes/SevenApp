@@ -1,0 +1,64 @@
+{% raw %}
+<p>Hey Neamar!</p>
+<p>You played {{ totalGames.nb_games }} games during last season, and won {{ totalGames.nb_wins }}.</p>
+
+Repartition:
+{{ graph "pie" "Games by queue" "queue" "count" "games" queuesRepartition }}
+
+<p>You killed {{ minionsKilled.sum }} minions</p>
+
+Most played champions:
+{{ graph "bar" "Most played champions" "name" "nb_games" "games" mostPlayedChampions }}
+
+
+Champions with best winrate (played at least 5 times):
+{{ graph "bar" "Highest winrate (played at least 5 times)" "name" "winrate" "% winrate" highestChampionWinrate }}
+
+<p>You once had {{ mostCs.cs }} cs in a single game.</p>
+
+Roles played:
+{{ graph "percentage" "Roles played" "role" "count" "" rolesPlayed }}
+
+<p>Your average KDA: {{ averageKda.average_kda}}, most kills in a game: {{ mostKills.kills }}, most deaths in a game: {{ mostDeaths.deaths}} and max assists in a game {{ mostAssists.assists}}. Your best KDA: {{ bestKda.kills }}/ {{ bestKda.deaths }} / {{ bestKda.assists }}, your worst KDA: {{ worstKda.kills }}/ {{ worstKda.deaths }} / {{ worstKda.assists }}</p>
+
+Winrate by role (played at least 5 times):
+{{ graph "bar" "Winrate by role (played at least 5 times)" "role" "winrate" "% winrate" winrateByRole }}
+
+
+<p>You destroyed {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.</p>
+
+Games by patch:
+{{ graph "line" "Games by patch" "patch" "count" "games" patchRepartition }}
+
+<p>You had first blood in {{ first.first_blood }} games, first tower in {{ first.first_tower }} games and first inhibitor in {{ first.first_inhibitor }} of your games.</p>
+
+
+How do you deal with your opponents?
+{{ graph "bar" "Nemesis" "name" "winrate" "% winrate" bestWinrateAgainst }}
+
+<p>Your longest game was {{ longestGame.duration }}s. Your shortest game (excluding remakes) was {{ shortestGame.duration }}s.</p>
+
+Winrate based on gamelength
+{{ graph "line" "Winrate based on game length (minutes)" "bucket" "winrate" "% winrate" winrateByGameDuration }}
+
+<p>You once destroyed {{ mostInhibitorsDestroyed.sum}} inhibitors!</p>
+
+Spells on D
+{{ graph "bar" "Spells on D" "spell_d" "count" "games" spellD }}
+
+Spells on F
+{{ graph "bar" "Spells on F" "spell_f" "count" "games" spellF }}
+
+<p>Your longest killing spree was {{ mostKillingSpree.largest_spree }}</p>
+
+Multikills
+{{ multiKillsByChampions }}
+
+When do you play?
+{{ graph "line" "Hour (UTC, translate to your timezone!)" "hour" "count" "count" gamesByHour }}
+
+{{ graph "line" "Day of Week" "dow" "count" "count" gamesByHour }}
+
+<p>You had a game where you earned {{ mostGold.gold_earned }} gold!</p>
+
+{% endraw %}

@@ -1,0 +1,77 @@
+---
+title: TEST
+---
+
+<html>
+<head>
+  <title>Your achievements</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+  <script src="https://unpkg.com/frappe-charts@0.0.7/dist/frappe-charts.min.iife.js"></script>
+  <script>
+"use strict";
+/*global XMLHttpRequest, Handlebars */
+function callAjax(url, callback) {
+  var xmlhttp;
+  // compatible with IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+      callback(JSON.parse(xmlhttp.responseText));
+    }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+  </script>
+</head>
+<body>
+  <h1>Your League achievements for Season 7</h1>
+
+  <div id="content"></div>
+
+  <script id="template" type="text/x-handlebars-template">
+{% include achievements.html %}
+  </script>
+  <script>
+
+var graphCounter = 0;
+var graphLoader = [];
+
+Handlebars.registerHelper('graph', function(type, title, labelName, dataName, tooltip, data) {
+  var graphData = {
+    labels: data.map(d => d[labelName]),
+    datasets: [{values: data.map(d => d[dataName])}]
+  };
+  var graphId = "graph-" + graphCounter;
+  graphCounter += 1;
+  graphLoader.push(function() {
+    var chart = new Chart({
+      parent: "#" + graphId,
+      title: title,
+      data: graphData,
+      type: type,
+      height: 250,
+
+      colors: ['#7cd6fd', '#743ee2'],
+
+      format_tooltip_x: d => (d + '').toUpperCase(),
+      format_tooltip_y: d => d + ' ' + tooltip
+    });
+  });
+
+  return new Handlebars.SafeString("<div id=" + graphId + "></div>");
+});
+
+var source   = document.getElementById("template").innerHTML;
+var template = Handlebars.compile(source);
+callAjax('http://localhost:3000/achievements?summoner=neamar&region=euw&role=top&level=3', function(res) {
+  var html = template(res);
+  document.getElementById('content').innerHTML = html;
+
+  setTimeout(function() {
+    graphLoader.forEach(f => f());
+  }, 10);
+});
+  </script>
+</body>
+</html>
