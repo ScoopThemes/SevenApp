@@ -9,7 +9,7 @@ title: TEST
   <script src="https://unpkg.com/frappe-charts@0.0.7/dist/frappe-charts.min.iife.js"></script>
   <script>
 "use strict";
-/*global XMLHttpRequest, Handlebars */
+/*global XMLHttpRequest, Handlebars, Chart */
 function callAjax(url, callback) {
   var xmlhttp;
   // compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -45,7 +45,7 @@ Handlebars.registerHelper('graph', function(type, title, labelName, dataName, to
   var graphId = "graph-" + graphCounter;
   graphCounter += 1;
   graphLoader.push(function() {
-    var chart = new Chart({
+    new Chart({
       parent: "#" + graphId,
       title: title,
       data: graphData,
@@ -60,6 +60,41 @@ Handlebars.registerHelper('graph', function(type, title, labelName, dataName, to
   });
 
   return new Handlebars.SafeString("<div id=" + graphId + "></div>");
+});
+
+var PLATFORMS = {
+  'br': 'BR1',
+  'eune': 'EUN1',
+  'euw': 'EUW1',
+  'kr': 'KR',
+  'lan': 'LA1',
+  'las': 'LA2',
+  'na': 'NA1',
+  'oce': 'OC1',
+  'tr': 'TR1',
+  'ru': 'RU',
+  'jp': 'JP1',
+  'pbe': 'PBE'
+};
+
+Handlebars.registerHelper('match_link', function(region, id, accountId) {
+  return `https://matchhistory.${region.trim()}.leagueoflegends.com/en/#match-details/${PLATFORMS[region.trim().toLowerCase()]}/${id}/${accountId}?tab=overview`;
+});
+
+Handlebars.registerHelper('number', function(number) {
+  return number.toLocaleString();
+});
+
+Handlebars.registerHelper('duration', function(duration) {
+  var hour = Math.floor(duration / 3600);
+  var minutes = Math.floor((duration - hour * 3600) / 60);
+  var seconds = duration % 60;
+
+  if(hour === 0) {
+    return `${minutes}m${seconds}s`;
+  }
+
+  return `${hour}h${minutes}m${seconds}s`;
 });
 
 var source   = document.getElementById("template").innerHTML;
