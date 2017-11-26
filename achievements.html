@@ -4,12 +4,12 @@ title: TEST
 
 <html>
 <head>
-  <title>Your achievements</title>
+  <title>Your S7 achievements</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
   <script src="https://unpkg.com/frappe-charts@0.0.7/dist/frappe-charts.min.iife.js"></script>
   <script>
 "use strict";
-/*global XMLHttpRequest, Handlebars, Chart, $ */
+/*global XMLHttpRequest, Handlebars, Chart, $, URLSearchParams, window */
 function callAjax(url, callback) {
   var xmlhttp;
   // compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -31,65 +31,8 @@ function callAjax(url, callback) {
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <style>
-  /* Custom Stylesheet */
-/**
- * Use this file to override Materialize files so you can update
- * the core Materialize files in the future
- *
- * Made By MaterializeCSS.com
- */
+  <link rel="stylesheet" type="text/css" href="/css/achievements.css" media="screen,projection" />
 
-nav ul a,
-nav .brand-logo {
-  color: #444;
-}
-
-p {
-  line-height: 2rem;
-}
-
-.button-collapse {
-  color: #26a69a;
-}
-
-.parallax-container {
-  min-height: 380px;
-  line-height: 0;
-  height: auto;
-  color: rgba(255,255,255,.9);
-}
-  .parallax-container .section {
-    width: 100%;
-  }
-
-@media only screen and (max-width : 992px) {
-  .parallax-container .section {
-    position: absolute;
-    top: 40%;
-  }
-  #index-banner .section {
-    top: 10%;
-  }
-}
-
-@media only screen and (max-width : 600px) {
-  #index-banner .section {
-    top: 0;
-  }
-}
-
-.icon-block {
-  padding: 0 15px;
-}
-.icon-block .material-icons {
-  font-size: inherit;
-}
-
-footer.page-footer {
-  margin: 0;
-}
-</style>
 </head>
 <body>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -101,7 +44,7 @@ footer.page-footer {
         <br><br>
         <h1 class="header center teal-text text-lighten-2">Your League achievements for Season 7</h1>
         <div class="row center">
-          <h5 class="header col s12 light">Let's look back at your stats, shall we?</h5>
+          <h5 class="header col s12 light">Let's look back at your ranked stats, shall we?</h5>
         </div>
         <br><br>
 
@@ -110,7 +53,20 @@ footer.page-footer {
     <div class="parallax"><img src="http://www.teamward.xyz/img/bk.jpg" alt="Unsplashed background img 1"></div>
   </div>
 
-  <div id="content"></div>
+  <div id="content">
+      <div class="container">
+        <div class="section">
+          <div class="row">
+            <div class="col s12 center">
+              <h3><i class="mdi-content-send brown-text"></i></h3>
+              <h4>Please wait, I'm loading your stats...</h4>
+              <div style="width:200px; margin: auto">{% include spinner.html %}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <footer class="page-footer teal">
@@ -244,17 +200,20 @@ if(!summoner || !region) {
   document.getElementById("content").innerHTML = "Invalid URL";
 }
 else {
-  callAjax(`http://localhost:3000/achievements?summoner=${summoner}&region=${region}`, function(res) {
+  callAjax(`https://staging.teamward.xyz/achievements?summoner=${summoner}&region=${region}`, function(res) {
     var html = template(res);
     document.getElementById('content').innerHTML = html;
 
     setTimeout(function() {
       graphLoader.forEach(f => f());
-      $('.button-collapse').sideNav();
       $('.parallax').parallax();
     }, 10);
   });
 }
+
+$(function() {
+  $('.parallax').parallax();
+});
   </script>
 </body>
 </html>
