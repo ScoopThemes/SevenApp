@@ -1,0 +1,128 @@
+{% raw %}
+<div class="container">
+  <div class="section">
+    <div class="row">
+      <div class="col s12 center">
+        <h3><i class="mdi-content-send brown-text"></i></h3>
+        <h4>You played {{ number totalGames.nb_games }} <strong>ranked</strong> games during last season, and won {{ number totalGames.nb_wins }} (winrate: {{ totalGames.winrate }}%).</h4>
+        <div class="left-align light">
+          {{ graph "percentage" "Games by queue" "queue" "count" "games" queuesRepartition }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ parallax_start }}
+You killed a total of {{ number minionsKilled.sum }} minions
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Most played champions"}}
+<p class="text-lighten-4 center small">(played at least 5 times)</p>
+{{ graph "percentage" "Most played champions" "name" "nb_games" "games" mostPlayedChampions }}
+{{ section_end }}
+
+{{ parallax_start }}
+You once killed <a href="{{ match_link region mostCs.id accountId }}">{{ mostCs.cs }}</a> minions in a single game<br>
+<small>(go on, click on the number!)</small></p>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Champions with best winrate"}}
+<p class="text-lighten-4 center small">(played at least 5 times)</p>
+{{ graph "bar" "Highest winrate (played at least 5 times)" "name" "winrate" "% winrate" winrateByChampion }}
+{{ table "name,nb_games,winrate" winrateByChampion }}
+{{ section_end }}
+
+{{ parallax_start }}
+Your average KDA: {{ averageKda.average_kda}}.<br>
+Your best KDA: <a href="{{ match_link region bestKda.id accountId }}">{{ bestKda.kills }}/{{ bestKda.deaths }}/{{ bestKda.assists }}</a><br>
+Your worst KDA: <a href="{{ match_link region worstKda.id accountId }}">{{ worstKda.kills }}/{{ worstKda.deaths }}/{{ worstKda.assists }}</a>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Roles played" }}
+<p class="text-lighten-4 center small">(? will be displayed for games where you roamed the first 10 minutes)</p>
+{{ graph "percentage" "Roles played" "role" "count" "games" rolesPlayed }}
+{{ section_end }}
+
+{{ parallax_start }}
+Most kills in a game: <a href="{{ match_link region mostKills.id accountId }}">{{ mostKills.kills }}</a>, most deaths in a game: <a href="{{ match_link region mostDeaths.id accountId }}">{{ mostDeaths.deaths}}</a> and max assists in a game <a href="{{ match_link region mostAssists.id accountId }}">{{ mostAssists.assists}}</a>.
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Winrate by role" }}
+<p class="text-lighten-4 center small">(played at least 5 times)</p>
+{{ graph "bar" "Winrate by role (played at least 5 times)" "role" "winrate" "% winrate" winrateByRole }}
+{{ table "role,winrate" winrateByRole }}
+{{ section_end }}
+
+{{ parallax_start }}
+You destroyed a total of {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Number of games by patch" }}
+<p class="text-lighten-4 center small">(patches where you didn't play are not displayed)</p>
+{{ graph "line" "Games by patch" "patch" "count" "games" patchRepartition }}
+{{ section_end }}
+
+{{ parallax_start }}
+You had first blood in {{ first.first_blood }} games ({{first.first_blood_percent}}%), first tower in {{ first.first_tower }} games ({{ first.first_tower_percent}}%) and first inhibitor in {{ first.first_inhibitor }} of your games ({{ first.first_inhibitor_percent }}%).<br>
+<small>Keep in mind, the average is 10%!</small>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "How do you deal with your opponents?" }}
+<p class="center">"When I play against {{ bestWinrateAgainst.0.name}}; I win in {{ bestWinrateAgainst.0.winrate }}% of my games".</p>
+{{ graph "bar" "Nemesis" "name" "winrate" "% winrate" bestWinrateAgainst }}
+<p class="text-lighten-4 center small">(you need to play against a champion at least 5 times for him to appear)</p>
+{{ table "name,winrate" bestWinrateAgainst }}
+{{ section_end }}
+
+{{ parallax_start }}
+Your longest game was <a href="{{ match_link region longestGame.id accountId }}">{{ duration longestGame.duration }}</a> ({{#if longestGame.won}}you won{{else}}you lost{{/if}}).<br>
+Your shortest game (excluding remakes) was <a href="{{ match_link region shortestGame.id accountId }}">{{ duration shortestGame.duration }}</a> ({{#if shortestGame.won}}you won{{else}}you lost{{/if}}).</p>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Winrate based on game length (minutes)" }}
+{{ graph "line" "Winrate based on game length (minutes)" "bucket" "winrate" "% winrate" winrateByGameDuration }}
+{{ section_end }}
+
+{{ parallax_start }}
+You once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id accountId }}">{{ mostInhibitorsDestroyed.sum}} inhibitors</a> in one game!</p>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Spells on D"}}
+{{ graph "bar" "Spells on D" "name" "count" "games" spellD }}
+{{ section_end }}
+
+{{ section_start "Spells on F"}}
+{{ graph "bar" "Spells on F" "name" "count" "games" spellF }}
+{{ section_end }}
+
+{{ parallax_start }}
+Your longest killing spree was  <a href="{{ match_link region mostKillingSpree.id accountId }}">{{ mostKillingSpree.largest_spree }}</a>.</p>
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Multikills" }}
+{{ table  "name,double_kills,triple_kills,quadra_kills,penta_kills" multiKillsByChampions }}
+{{ section_end }}
+
+{{ parallax_start }}
+You had a game where you earned  <a href="{{ match_link region mostGold.id accountId }}">{{ number mostGold.gold_earned }}</a> gold!
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "When do you play?" }}
+<p class="text-lighten-4 center small">(I'm sorry, but all of this is UTC. Convert to your timezone!)</p>
+<p class="text-lighten-4 center small">(missing data not being displayed)</p>
+{{ graph "line" "Hour (UTC, translate to your timezone!)" "hour" "count" "games" gamesByHour }}
+{{ graph "line" "Day of Week" "dow" "count" "games" gamesByDayOfWeek }}
+{{ section_end }}
+
+{{ parallax_start}}
+You win your lane in {{ laneDomination.lane_won_percentage }}% of your games.
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Are you a good laner?" }}
+<p class="text-lighten-4 center small">(played at least 5 times. "Lane won" is defined as having more gold than your opponent at 10')</p>
+{{ graph "bar" "Laning phase winrate" "name" "lane_won_percentage" "%" laneDominationByChampion }}
+{{ table "name,lane_won_percentage" laneDominationByChampion }}
+{{ section_end }}
+
+{% endraw %}

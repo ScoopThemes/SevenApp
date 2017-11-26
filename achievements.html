@@ -1,0 +1,219 @@
+---
+title: TEST
+---
+
+<html>
+<head>
+  <title>Your S7 achievements</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+  <script src="https://unpkg.com/frappe-charts@0.0.7/dist/frappe-charts.min.iife.js"></script>
+  <script>
+"use strict";
+/*global XMLHttpRequest, Handlebars, Chart, $, URLSearchParams, window */
+function callAjax(url, callback) {
+  var xmlhttp;
+  // compatible with IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+      callback(JSON.parse(xmlhttp.responseText));
+    }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+  </script>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"  media="screen,projection"/>
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link rel="stylesheet" type="text/css" href="/css/achievements.css" media="screen,projection" />
+
+</head>
+<body>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">Your League achievements for Season 7</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Let's look back at your ranked stats, shall we?</h5>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="http://www.teamward.xyz/img/bk.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
+  <div id="content">
+      <div class="container">
+        <div class="section">
+          <div class="row">
+            <div class="col s12 center">
+              <h3><i class="mdi-content-send brown-text"></i></h3>
+              <h4>Please wait, I'm loading your stats...</h4>
+              <div style="width:200px; margin: auto">{% include spinner.html %}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">See you next season!</h5>
+          <p class="grey-text text-lighten-4">Those stats were generated from users of <strong><a href="https://play.google.com/store/apps/details?id=fr.neamar.lolgamedata&hl=en" class="white-text">Teamward</a></strong>. Get it for free on the Play Store!</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        Made by Neamar. Teamward is open-source! <a href="https://github.com/neamar/teamward-client" class="white-text"><strong>Send pull-requests</strong></a> :)<br>
+        Page design from <a href="http://materializecss.com/" class="white-text">Materialize</a><br>
+        Charts from <a href="https://frappe.github.io/charts/" class="white-text">Frappé</a><br><br>
+        TeamWard isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+      </div>
+    </div>
+  </footer>
+
+  <script id="template" type="text/x-handlebars-template">
+{% include achievements.html %}
+  </script>
+  <script>
+
+var graphCounter = 0;
+var graphLoader = [];
+
+Handlebars.registerHelper('graph', function(type, title, labelName, dataName, tooltip, data) {
+  var graphData = {
+    labels: data.map(d => d[labelName]),
+    datasets: [{values: data.map(d => d[dataName])}]
+  };
+  var graphId = "graph-" + graphCounter;
+  graphCounter += 1;
+  graphLoader.push(function() {
+    var chart = new Chart({
+      parent: "#" + graphId,
+      // title: title,
+      data: graphData,
+      type: type,
+      height: 250,
+
+      colors: ['#7cd6fd', '#743ee2'],
+
+      format_tooltip_x: d => (d + '').toUpperCase(),
+      format_tooltip_y: d => d + ' ' + tooltip
+    });
+    chart;
+  });
+
+  return new Handlebars.SafeString("<div id=" + graphId + "></div>");
+});
+
+var PLATFORMS = {
+  'br': 'BR1',
+  'eune': 'EUN1',
+  'euw': 'EUW1',
+  'kr': 'KR',
+  'lan': 'LA1',
+  'las': 'LA2',
+  'na': 'NA1',
+  'oce': 'OC1',
+  'tr': 'TR1',
+  'ru': 'RU',
+  'jp': 'JP1',
+  'pbe': 'PBE'
+};
+
+Handlebars.registerHelper('match_link', function(region, id, accountId) {
+  return `https://matchhistory.${region.trim()}.leagueoflegends.com/en/#match-details/${PLATFORMS[region.trim().toLowerCase()]}/${id}/${accountId}?tab=overview`;
+});
+
+Handlebars.registerHelper('number', function(number) {
+  return number.toLocaleString();
+});
+
+Handlebars.registerHelper('duration', function(duration) {
+  var hour = Math.floor(duration / 3600);
+  var minutes = Math.floor((duration - hour * 3600) / 60);
+  var seconds = duration % 60;
+
+  if(hour === 0) {
+    return `${minutes}m${seconds}s`;
+  }
+
+  return `${hour}h${minutes}m${seconds}s`;
+});
+
+Handlebars.registerHelper('table', function(columns, data) {
+  columns = columns.split(",");
+  var table = "<table><thead><tr>";
+  columns.forEach(c => table += `<th>${c.replace(/_/g, ' ')}</th>`);
+  table += "</tr></thead><toby>";
+  data.forEach(function(d) {
+    table += "<tr>";
+    columns.forEach(c => table += `<td>${d[c]}</td>`);
+    table += "</tr>";
+  });
+  table += "</table>";
+  return new Handlebars.SafeString(table);
+});
+
+
+Handlebars.registerHelper('parallax_start', function() {
+  return new Handlebars.SafeString(`<div class="parallax-container valign-wrapper"><div class="section no-pad-bot"><div class="container"><div class="row center"><h5 class="header col s12 light">`);
+});
+
+
+Handlebars.registerHelper('parallax_end', function(background) {
+  return new Handlebars.SafeString(`</h5></div></div></div><div class="parallax"><img src="${background}" alt=""></div></div>`);
+});
+
+
+Handlebars.registerHelper('section_start', function(title) {
+  return new Handlebars.SafeString(`<div class="container"><div class="section"><div class="row"><div class="col s12 center"><h3><i class="mdi-content-send brown-text"></i></h3><h4>${title}</h4><div class="left-align light">`);
+});
+
+Handlebars.registerHelper('section_end', function() {
+  return new Handlebars.SafeString(`</div></div></div></div></div>`);
+});
+
+var source   = document.getElementById("template").innerHTML;
+var template = Handlebars.compile(source);
+const urlParams = new URLSearchParams(window.location.search.substr(1));
+const summoner = urlParams.get('summoner');
+const region = urlParams.get('region');
+
+if(!summoner || !region) {
+  document.getElementById("content").innerHTML = "Invalid URL";
+}
+else {
+  callAjax(`https://staging.teamward.xyz/achievements?summoner=${summoner}&region=${region}`, function(res) {
+    var html = template(res);
+    document.getElementById('content').innerHTML = html;
+
+    setTimeout(function() {
+      graphLoader.forEach(f => f());
+      $('.parallax').parallax();
+    }, 10);
+  });
+}
+
+$(function() {
+  $('.parallax').parallax();
+});
+  </script>
+</body>
+</html>
