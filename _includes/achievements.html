@@ -1,11 +1,11 @@
 {% raw %}
 <p>Hey Neamar!</p>
-<p>You played {{ number totalGames.nb_games }} games during last season, and won {{ number totalGames.nb_wins }} (winrate: {{ totalGames.winrate }}%).</p>
+<p class="fact">You played {{ number totalGames.nb_games }} games during last season, and won {{ number totalGames.nb_wins }} (winrate: {{ totalGames.winrate }}%).</p>
 
 Repartition:
 {{ graph "pie" "Games by queue" "queue" "count" "games" queuesRepartition }}
 
-<p>You killed a total of {{ number minionsKilled.sum }} minions</p>
+<p class="fact">You killed a total of {{ number minionsKilled.sum }} minions</p>
 
 Most played champions:
 {{ graph "percentage" "Most played champions" "name" "nb_games" "games" mostPlayedChampions }}
@@ -13,51 +13,51 @@ Most played champions:
 Champions with best winrate (played at least 5 times):
 {{ graph "bar" "Highest winrate (played at least 5 times)" "name" "winrate" "% winrate" highestChampionWinrate }}
 
-<p>You once killed <a href="{{ match_link region mostCs.id accountId }}">{{ mostCs.cs }}</a> minions in a single game.</p>
+<p class="fact">You once killed <a href="{{ match_link region mostCs.id accountId }}">{{ mostCs.cs }}</a> minions in a single game.</p>
 
 Roles played:
 {{ graph "percentage" "Roles played" "role" "count" "" rolesPlayed }}
 
-<p>Your average KDA: {{ averageKda.average_kda}}, most kills in a game: {{ mostKills.kills }}, most deaths in a game: {{ mostDeaths.deaths}} and max assists in a game {{ mostAssists.assists}}. Your best KDA: {{ bestKda.kills }}/ {{ bestKda.deaths }} / {{ bestKda.assists }}, your worst KDA: {{ worstKda.kills }}/ {{ worstKda.deaths }} / {{ worstKda.assists }}</p>
+<p class="fact">Your average KDA: {{ averageKda.average_kda}}, most kills in a game: {{ mostKills.kills }}, most deaths in a game: {{ mostDeaths.deaths}} and max assists in a game {{ mostAssists.assists}}. Your best KDA: {{ bestKda.kills }}/ {{ bestKda.deaths }} / {{ bestKda.assists }}, your worst KDA: {{ worstKda.kills }}/ {{ worstKda.deaths }} / {{ worstKda.assists }}</p>
 
 Winrate by role (played at least 5 times):
 {{ graph "bar" "Winrate by role (played at least 5 times)" "role" "winrate" "% winrate" winrateByRole }}
 
 
-<p>You destroyed {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.</p>
+<p class="fact">You destroyed {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.</p>
 
 Games by patch:
 {{ graph "line" "Games by patch" "patch" "count" "games" patchRepartition }}
 
-<p>You had first blood in {{ first.first_blood }} games, first tower in {{ first.first_tower }} games and first inhibitor in {{ first.first_inhibitor }} of your games.</p>
+<p class="fact">You had first blood in {{ first.first_blood }} games ({{first.first_blood_percent}}%), first tower in {{ first.first_tower }} games ({{ first.first_tower_percent}}%) and first inhibitor in {{ first.first_inhibitor }} of your games ({{ first.first_inhibitor_percent }}%). Keep in mind, the average is 10%!</p>
 
 
 How do you deal with your opponents?
 {{ graph "bar" "Nemesis" "name" "winrate" "% winrate" bestWinrateAgainst }}
 
-<p>Your longest game was <a href="{{ match_link region longestGame.id accountId }}">{{ duration longestGame.duration }}</a>. Your shortest game (excluding remakes) was <a href="{{ match_link region shortestGame.id accountId }}">{{ duration shortestGame.duration }}</a>.</p>
+<p class="fact">Your longest game was <a href="{{ match_link region longestGame.id accountId }}">{{ duration longestGame.duration }}</a> ({{#if longestGame.won}}you won{{else}}you lost{{/if}}). Your shortest game (excluding remakes) was <a href="{{ match_link region shortestGame.id accountId }}">{{ duration shortestGame.duration }}</a> ({{#if shortestGame.won}}you won{{else}}you lost{{/if}}).</p>
 
 Winrate based on gamelength
 {{ graph "line" "Winrate based on game length (minutes)" "bucket" "winrate" "% winrate" winrateByGameDuration }}
 
-<p>You once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id accountId }}">{{ mostInhibitorsDestroyed.sum}} inhibitors</a>!</p>
+<p class="fact">Your once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id accountId }}">{{ mostInhibitorsDestroyed.sum}} inhibitors</a> in one game!</p>
 
 Spells on D
-{{ graph "bar" "Spells on D" "spell_d" "count" "games" spellD }}
+{{ graph "bar" "Spells on D" "name" "count" "games" spellD }}
 
 Spells on F
-{{ graph "bar" "Spells on F" "spell_f" "count" "games" spellF }}
+{{ graph "bar" "Spells on F" "name" "count" "games" spellF }}
 
-<p>Your longest killing spree was  <a href="{{ match_link region mostKillingSpree.id accountId }}">{{ mostKillingSpree.largest_spree }}</a></p>
+<p class="fact">Your longest killing spree was  <a href="{{ match_link region mostKillingSpree.id accountId }}">{{ mostKillingSpree.largest_spree }}</a></p>
 
 Multikills
-{{ multiKillsByChampions }}
+{{ table  "name,double_kills,triple_kills,quadra_kills,penta_kills" multiKillsByChampions }}
 
 When do you play?
-{{ graph "line" "Hour (UTC, translate to your timezone!)" "hour" "count" "count" gamesByHour }}
+{{ graph "line" "Hour (UTC, translate to your timezone!)" "hour" "count" "games" gamesByHour }}
 
-{{ graph "line" "Day of Week" "dow" "count" "count" gamesByHour }}
+{{ graph "line" "Day of Week" "dow" "count" "games" gamesByDayOfWeek }}
 
-<p>You had a game where you earned  <a href="{{ match_link region mostGold.id accountId }}">{{ mostGold.gold_earned }}</a> gold!</p>
+<p class="fact">You had a game where you earned  <a href="{{ match_link region mostGold.id accountId }}">{{ mostGold.gold_earned }}</a> gold!</p>
 
 {% endraw %}

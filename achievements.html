@@ -23,6 +23,14 @@ function callAjax(url, callback) {
   xmlhttp.send();
 }
   </script>
+  <style>
+p.fact {
+  border: 1px solid black;
+  background: #a09b8c;
+  margin: 10px;
+  padding: 30px;
+}
+  </style>
 </head>
 <body>
   <h1>Your League achievements for Season 7</h1>
@@ -45,7 +53,7 @@ Handlebars.registerHelper('graph', function(type, title, labelName, dataName, to
   var graphId = "graph-" + graphCounter;
   graphCounter += 1;
   graphLoader.push(function() {
-    new Chart({
+    var chart = new Chart({
       parent: "#" + graphId,
       title: title,
       data: graphData,
@@ -57,6 +65,7 @@ Handlebars.registerHelper('graph', function(type, title, labelName, dataName, to
       format_tooltip_x: d => (d + '').toUpperCase(),
       format_tooltip_y: d => d + ' ' + tooltip
     });
+    chart;
   });
 
   return new Handlebars.SafeString("<div id=" + graphId + "></div>");
@@ -95,6 +104,20 @@ Handlebars.registerHelper('duration', function(duration) {
   }
 
   return `${hour}h${minutes}m${seconds}s`;
+});
+
+Handlebars.registerHelper('table', function(columns, data) {
+  columns = columns.split(",");
+  var table = "<table><thead><tr>";
+  columns.forEach(c => table += `<th>${c.replace('_', ' ')}</th>`);
+  table += "</tr></thead><toby>";
+  data.forEach(function(d) {
+    table += "<tr>";
+    columns.forEach(c => table += `<td>${d[c]}</td>`);
+    table += "</tr>";
+  });
+  table += "</table>";
+  return new Handlebars.SafeString(table);
 });
 
 var source   = document.getElementById("template").innerHTML;
