@@ -1,19 +1,4 @@
 {% raw %}
-<div id="index-banner" class="parallax-container">
-  <div class="section no-pad-bot">
-    <div class="container">
-      <br><br>
-      <h1 class="header center teal-text text-lighten-2">Your League achievements for Season 7</h1>
-      <div class="row center">
-        <h5 class="header col s12 light">Let's look back at your stats, shall we?</h5>
-      </div>
-      <br><br>
-
-    </div>
-  </div>
-  <div class="parallax"><img src="http://www.teamward.xyz/img/bk.jpg" alt="Unsplashed background img 1"></div>
-</div>
-
 <div class="container">
   <div class="section">
     <div class="row">
@@ -30,7 +15,7 @@
 
 {{ parallax_start }}
 You killed a total of {{ number minionsKilled.sum }} minions
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Most played champions"}}
 {{ graph "percentage" "Most played champions" "name" "nb_games" "games" mostPlayedChampions }}
@@ -39,18 +24,18 @@ You killed a total of {{ number minionsKilled.sum }} minions
 {{ parallax_start }}
 You once killed <a href="{{ match_link region mostCs.id accountId }}">{{ mostCs.cs }}</a> minions in a single game<br>
 <small>(go on, click on the number!)</small></p>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Champions with best winrate (played at least 5 times)"}}
-{{ graph "bar" "Highest winrate (played at least 5 times)" "name" "winrate" "% winrate" highestChampionWinrate }}
-{{ table "name,winrate" highestChampionWinrate }}
+{{ graph "bar" "Highest winrate (played at least 5 times)" "name" "winrate" "% winrate" winrateByChampion }}
+{{ table "name,nb_games,winrate" winrateByChampion }}
 {{ section_end }}
 
 {{ parallax_start }}
 Your average KDA: {{ averageKda.average_kda}}.<br>
 Your best KDA: <a href="{{ match_link region bestKda.id accountId }}">{{ bestKda.kills }}/ {{ bestKda.deaths }} / {{ bestKda.assists }}</a><br>
 Your worst KDA: <a href="{{ match_link region worstKda.id accountId }}">{{ worstKda.kills }}/ {{ worstKda.deaths }} / {{ worstKda.assists }}</a>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Roles played" }}
 {{ graph "percentage" "Roles played" "role" "count" "games" rolesPlayed }}
@@ -58,7 +43,7 @@ Your worst KDA: <a href="{{ match_link region worstKda.id accountId }}">{{ worst
 
 {{ parallax_start }}
 Most kills in a game: <a href="{{ match_link region mostKills.id accountId }}">{{ mostKills.kills }}</a>, most deaths in a game: <a href="{{ match_link region mostDeaths.id accountId }}">{{ mostDeaths.deaths}}</a> and max assists in a game <a href="{{ match_link region mostAssists.id accountId }}">{{ mostAssists.assists}}</a>.
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Winrate by role (played at least 5 times)" }}
 {{ graph "bar" "Winrate by role (played at least 5 times)" "role" "winrate" "% winrate" winrateByRole }}
@@ -66,8 +51,8 @@ Most kills in a game: <a href="{{ match_link region mostKills.id accountId }}">{
 {{ section_end }}
 
 {{ parallax_start }}
-<p class="fact">You destroyed {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.</p>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+You destroyed {{ inhibsAndTowersDestroyed.inhibitor_kills }} inhibitors and {{ inhibsAndTowersDestroyed.tower_kills }} turrets.
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Games by patch" }}
 {{ graph "line" "Games by patch" "patch" "count" "games" patchRepartition }}
@@ -76,7 +61,7 @@ Most kills in a game: <a href="{{ match_link region mostKills.id accountId }}">{
 {{ parallax_start }}
 You had first blood in {{ first.first_blood }} games ({{first.first_blood_percent}}%), first tower in {{ first.first_tower }} games ({{ first.first_tower_percent}}%) and first inhibitor in {{ first.first_inhibitor }} of your games ({{ first.first_inhibitor_percent }}%).<br>
 <small>Keep in mind, the average is 10%!</small>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "How do you deal with your opponents?" }}
 <p class="center">"When I play against {{ bestWinrateAgainst.0.name}}; I win in {{ bestWinrateAgainst.0.winrate }}% of my games".</p>
@@ -87,15 +72,15 @@ You had first blood in {{ first.first_blood }} games ({{first.first_blood_percen
 {{ parallax_start }}
 Your longest game was <a href="{{ match_link region longestGame.id accountId }}">{{ duration longestGame.duration }}</a> ({{#if longestGame.won}}you won{{else}}you lost{{/if}}).<br>
 Your shortest game (excluding remakes) was <a href="{{ match_link region shortestGame.id accountId }}">{{ duration shortestGame.duration }}</a> ({{#if shortestGame.won}}you won{{else}}you lost{{/if}}).</p>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
-{{ section_start "Winrate based on gamelength" }}
+{{ section_start "Winrate based on game length (minutes)" }}
 {{ graph "line" "Winrate based on game length (minutes)" "bucket" "winrate" "% winrate" winrateByGameDuration }}
 {{ section_end }}
 
 {{ parallax_start }}
-Your once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id accountId }}">{{ mostInhibitorsDestroyed.sum}} inhibitors</a> in one game!</p>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+You once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id accountId }}">{{ mostInhibitorsDestroyed.sum}} inhibitors</a> in one game!</p>
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Spells on D"}}
 {{ graph "bar" "Spells on D" "name" "count" "games" spellD }}
@@ -107,11 +92,15 @@ Your once destroyed <a href="{{ match_link region mostInhibitorsDestroyed.id acc
 
 {{ parallax_start }}
 Your longest killing spree was  <a href="{{ match_link region mostKillingSpree.id accountId }}">{{ mostKillingSpree.largest_spree }}</a>.</p>
-{{ parallax_end "http://d181w3hxxigzvh.cloudfront.net/wp-content/themes/rune_forge/imgs/magic-repeater.jpg" }}
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "Multikills" }}
 {{ table  "name,double_kills,triple_kills,quadra_kills,penta_kills" multiKillsByChampions }}
 {{ section_end }}
+
+{{ parallax_start }}
+You had a game where you earned  <a href="{{ match_link region mostGold.id accountId }}">{{ mostGold.gold_earned }}</a> gold!
+{{ parallax_end "/img/smoke.jpg" }}
 
 {{ section_start "When do you play?" }}
 (all times UTC, convert to your timezone)
@@ -119,6 +108,13 @@ Your longest killing spree was  <a href="{{ match_link region mostKillingSpree.i
 {{ graph "line" "Day of Week" "dow" "count" "games" gamesByDayOfWeek }}
 {{ section_end }}
 
-<p class="fact">You had a game where you earned  <a href="{{ match_link region mostGold.id accountId }}">{{ mostGold.gold_earned }}</a> gold!</p>
+{{ parallax_start}}
+You win your lane in {{ laneDomination.lane_won_percentage }}% of your games.
+{{ parallax_end "/img/smoke.jpg" }}
+
+{{ section_start "Are you a good laner?" }}
+{{ graph "bar" "Laning phase winrate" "name" "lane_won_percentage" "%" laneDominationByChampion }}
+{{ table "name,lane_won_percentage" laneDominationByChampion }}
+{{ section_end }}
 
 {% endraw %}

@@ -95,7 +95,42 @@ footer.page-footer {
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">Your League achievements for Season 7</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Let's look back at your stats, shall we?</h5>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="http://www.teamward.xyz/img/bk.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
   <div id="content"></div>
+
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">See you next season!</h5>
+          <p class="grey-text text-lighten-4">Those stats were generated from users of <strong><a href="https://play.google.com/store/apps/details?id=fr.neamar.lolgamedata&hl=en" class="white-text">Teamward</a></strong>. Get it for free on the Play Store!</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        Made by Neamar. Teamward is open-source! <a href="https://github.com/neamar/teamward-client" class="white-text"><strong>Send pull-requests</strong></a> :)<br>
+        Page design from <a href="http://materializecss.com/" class="white-text">Materialize</a><br>
+        Charts from <a href="https://frappe.github.io/charts/" class="white-text">Frappé</a><br><br>
+        TeamWard isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+      </div>
+    </div>
+  </footer>
 
   <script id="template" type="text/x-handlebars-template">
 {% include achievements.html %}
@@ -169,7 +204,7 @@ Handlebars.registerHelper('duration', function(duration) {
 Handlebars.registerHelper('table', function(columns, data) {
   columns = columns.split(",");
   var table = "<table><thead><tr>";
-  columns.forEach(c => table += `<th>${c.replace('_', ' ')}</th>`);
+  columns.forEach(c => table += `<th>${c.replace(/_/g, ' ')}</th>`);
   table += "</tr></thead><toby>";
   data.forEach(function(d) {
     table += "<tr>";
@@ -195,22 +230,31 @@ Handlebars.registerHelper('section_start', function(title) {
   return new Handlebars.SafeString(`<div class="container"><div class="section"><div class="row"><div class="col s12 center"><h3><i class="mdi-content-send brown-text"></i></h3><h4>${title}</h4><div class="left-align light">`);
 });
 
-Handlebars.registerHelper('section_end', function(background) {
+Handlebars.registerHelper('section_end', function() {
   return new Handlebars.SafeString(`</div></div></div></div></div>`);
 });
 
 var source   = document.getElementById("template").innerHTML;
 var template = Handlebars.compile(source);
-callAjax('http://localhost:3000/achievements?summoner=neamar&region=euw&role=top&level=3', function(res) {
-  var html = template(res);
-  document.getElementById('content').innerHTML = html;
+const urlParams = new URLSearchParams(window.location.search.substr(1));
+const summoner = urlParams.get('summoner');
+const region = urlParams.get('region');
 
-  setTimeout(function() {
-    graphLoader.forEach(f => f());
-    $('.button-collapse').sideNav();
-    $('.parallax').parallax();
-  }, 10);
-});
+if(!summoner || !region) {
+  document.getElementById("content").innerHTML = "Invalid URL";
+}
+else {
+  callAjax(`http://localhost:3000/achievements?summoner=${summoner}&region=${region}`, function(res) {
+    var html = template(res);
+    document.getElementById('content').innerHTML = html;
+
+    setTimeout(function() {
+      graphLoader.forEach(f => f());
+      $('.button-collapse').sideNav();
+      $('.parallax').parallax();
+    }, 10);
+  });
+}
   </script>
 </body>
 </html>
